@@ -1,0 +1,52 @@
+name: Build 老板影院 APK
+
+on:
+  push:
+    branches: [ fongmi ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: fongmi
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=/usr/local/lib/android/sdk" > local.properties
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Clean
+        run: ./gradlew clean
+
+      - name: Build TV APK
+        run: ./gradlew assembleLeanbackArm64_v8aDebug
+
+      - name: Build Mobile APK
+        run: ./gradlew assembleMobileArm64_v8aDebug
+
+      - name: Upload TV APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: 老板影院-TV版
+          path: app/build/outputs/apk/leanback/arm64_v8a/debug/*.apk
+
+      - name: Upload Mobile APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: 老板影院-手机版
+          path: app/build/outputs/apk/mobile/arm64_v8a/debug/*.apk
