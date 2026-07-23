@@ -115,7 +115,6 @@ dependencies {
     implementation libs.media
     implementation libs.media3.common
     implementation libs.media3.exoplayer
-    implementation libs.media3.exoplayer.drm
     implementation libs.media3.exoplayer.hls
     implementation libs.media3.exoplayer.source
     implementation libs.media3.extractor
